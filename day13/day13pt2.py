@@ -11,3 +11,28 @@ for i, ids in enumerate(id_strings):
     if ids != 'x':
         operational_ids.append(int(ids))
         targets.append(i % int(ids))
+
+def bezout_coeff(a, b):
+    prev_r = a
+    r = b
+    prev_s = 1
+    s = 0
+    prev_t = 0
+    t = 1
+    while r != 0:
+        q = prev_r // r
+        prev_r, r = (r, prev_r - q * r)
+        prev_s, s = (s, prev_s - q * s)
+        prev_t, t = (t, prev_t - q * t)
+
+    return (prev_s, prev_t)
+
+N = 1 # cumulative product of modulos.
+x = 0 # as in "x mod N"
+for t, id in zip(targets, operational_ids):
+    bi1, bi2 = bezout_coeff(N, id)
+    x = x * bi2 * id + (-t) * bi1 * N
+    N *= id
+    x = x % N
+
+print(x)
